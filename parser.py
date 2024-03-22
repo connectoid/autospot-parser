@@ -203,8 +203,10 @@ def main():
         # json_data = load_json()
         cars = get_cars(json_data)
         # save_json(cars, file='cars_data_out.json')
+        print(page)
         for car in cars:
-            pprint(car, sort_dicts=False)
+            # pprint(car, sort_dicts=False)
+            # print(count)
             all_cars.append(car)
             count += 1
 
