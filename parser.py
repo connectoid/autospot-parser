@@ -172,7 +172,6 @@ def get_cars(json_data):
         car = {}
         car['brand'] = item['brand_name']
         color = item['color_name']
-        body_type = item['body_type_name']
         year = item['year']
         model = item['model_name']
         car['model_full'] = f"{car['brand']} {model}, {color}, {year}"
@@ -181,6 +180,13 @@ def get_cars(json_data):
         car['price'] = item['prices']['price']
         car['old_price'] = item['prices']['rrc_price']
         car['url'] = item['url']
+        car['body_type'] = item['body_type_name']
+        car['engine_type'] = item['engine_type']
+        car['engine_type_name_noun'] = item['engine_type_name_noun']
+        car['wheel_drive_name'] = item['wheel_drive_name']
+        car['transmission_type'] = item['transmission_type']
+        car['transmission_type_name_noun'] = item['transmission_type_name_noun']
+        car['engine_power'] = item['engine_power']
         cars.append(car)
     return cars
 
@@ -217,7 +223,7 @@ def main():
 
     print(count)
     save_json(all_cars,  file='cars_data_out.json')
-    pandas.read_json("cars_data_out.json").to_excel("cars_data_out.xlsx")
+    # pandas.read_json("cars_data_out.json").to_excel("cars_data_out.xlsx")
 
 
 
