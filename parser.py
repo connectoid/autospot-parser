@@ -146,7 +146,7 @@ headers = {
 def get_json(page):
     params = {
         'sort': '-percent_discount',
-        'limit': '12',
+        'limit': '1000',
         'page': page,
         'radius': '0',
         'picture_exp': '1',
@@ -194,7 +194,7 @@ def load_json(file='cars_data.json'):
     
 
 def main():
-    pages_count = 3
+    pages_count = 11
     count = 1
     all_cars = []
     for page in range(1, pages_count + 1):
