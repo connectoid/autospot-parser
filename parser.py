@@ -151,14 +151,18 @@ def get_json(page):
         'radius': '0',
         'picture_exp': '1',
     }
-    response = requests.get(
-        'https://api.autospot.ru/rest/filter/cars-with-parallel-import/',
-        params=params,
-        cookies=cookies,
-        headers=headers,
-        verify=False
-    )
-    return response.json()
+    try:
+        response = requests.get(
+            'https://api.autospot.ru/rest/filter/cars-with-parallel-import/',
+            params=params,
+            cookies=cookies,
+            headers=headers,
+            verify=False
+        )
+        return response.json()
+    except:
+        return None
+    
 
 
 def get_cars(json_data):
@@ -194,21 +198,22 @@ def load_json(file='cars_data.json'):
     
 
 def main():
-    pages_count = 11
+    pages_count = 12
     count = 1
     all_cars = []
     for page in range(1, pages_count + 1):
         json_data = get_json(page) 
-        save_json(json_data)
+        # save_json(json_data)
         # json_data = load_json()
-        cars = get_cars(json_data)
-        # save_json(cars, file='cars_data_out.json')
-        print(page)
-        for car in cars:
-            # pprint(car, sort_dicts=False)
-            # print(count)
-            all_cars.append(car)
-            count += 1
+        if json_data:
+            cars = get_cars(json_data)
+            # save_json(cars, file='cars_data_out.json')
+            print(page)
+            for car in cars:
+                # pprint(car, sort_dicts=False)
+                # print(count)
+                all_cars.append(car)
+                count += 1
 
     print(count)
     save_json(all_cars,  file='cars_data_out.json')
