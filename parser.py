@@ -154,8 +154,12 @@ def get_json_options_data(url):
         scripts = soup.find_all('script')
         jsontext = scripts[-1].text
         jsontext = jsontext.replace('&q;', '"')
-        json_data = json.loads(jsontext)
-        return json_data
+        try:
+            json_data = json.loads(jsontext)
+            return json_data
+        except Exception as e:
+            print(f'! ! ! Error loading json data: {e}')
+            return False
     else:
         print(f'Request error: {response.status_code}')
 
@@ -264,13 +268,16 @@ def main():
                 # pprint(car, sort_dicts=False)
                 print(f'{count}. {car["url"]}')
                 json_options_data = get_json_options_data(car['url'])
-                json_chars = get_chars(json_options_data)
-                json_options = get_options(json_options_data)
-                car_options[car['url']] = {
-                    'Характеристики': json_chars,
-                    'Опции': json_options
-                }
-                all_cars_options_chars.append(car_options)
+                if json_options_data:
+                    json_chars = get_chars(json_options_data)
+                    json_options = get_options(json_options_data)
+                    car_options[car['url']] = {
+                        'Характеристики': json_chars,
+                        'Опции': json_options
+                    }
+                    all_cars_options_chars.append(car_options)
+                else:
+                    print(f'Skiping: {cars["url"]}')
                 all_cars.append(car)
                 count += 1
             break
