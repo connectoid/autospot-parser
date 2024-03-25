@@ -262,7 +262,7 @@ def main():
             for car in cars:
                 car_options = {}
                 # pprint(car, sort_dicts=False)
-                # print(count)
+                print(f'{count}. {car["url"]}')
                 json_options_data = get_json_options_data(car['url'])
                 json_chars = get_chars(json_options_data)
                 json_options = get_options(json_options_data)
