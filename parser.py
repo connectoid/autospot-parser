@@ -280,8 +280,6 @@ def main():
                     print(f'Skiping: {car["url"]}')
                 all_cars.append(car)
                 count += 1
-            break
-        break
 
 
     print(count)
