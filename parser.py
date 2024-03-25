@@ -202,7 +202,7 @@ def get_options(json_data):
 def get_json(page):
     params = {
         'sort': '-percent_discount',
-        'limit': '1000',
+        'limit': '100',
         'page': page,
         'radius': '0',
         'picture_exp': '1',
@@ -260,7 +260,7 @@ def load_json(file='cars_data.json'):
     
 
 def main():
-    pool_size = 12
+    pool_size = 107
     pages_count = 1
     count = 1
     all_cars = []
