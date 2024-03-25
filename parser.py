@@ -5,6 +5,7 @@ import http.client
 import requests
 import pandas
 from bs4 import BeautifulSoup
+from multiprocessing.pool import ThreadPool as Pool
 
 urllib3.disable_warnings()
 http.client._MAXHEADERS = 1000
@@ -146,7 +147,8 @@ headers = {
     'sec-ch-ua-platform': '"macOS"',
 }
 
-def get_json_options_data(url):
+def get_json_options_data(url, car_options):
+    # car_options = {}
     response = requests.get(url, headers=headers, verify=False)
     if response.status_code == 200:
         response.encoding = 'utf-8'
@@ -155,11 +157,18 @@ def get_json_options_data(url):
         jsontext = scripts[-1].text
         jsontext = jsontext.replace('&q;', '"')
         try:
-            json_data = json.loads(jsontext)
-            return json_data
+            json_options_data = json.loads(jsontext)
+            if json_options_data:
+                json_chars = get_chars(json_options_data)
+                json_options = get_options(json_options_data)
+                car_options[url] = {
+                    'Характеристики': json_chars,
+                    'Опции': json_options
+                }
+            else:
+                print(f'Skiping: {url}')
         except Exception as e:
             print(f'! ! ! Error loading json data: {e}')
-            return False
     else:
         print(f'Request error: {response.status_code}')
 
@@ -251,7 +260,8 @@ def load_json(file='cars_data.json'):
     
 
 def main():
-    pages_count = 12
+    pool_size = 12
+    pages_count = 1
     count = 1
     all_cars = []
     all_cars_options_chars = []
@@ -262,25 +272,18 @@ def main():
         if json_data:
             cars = get_cars(json_data)
             # save_json(cars, file='cars_data_out.json')
-            print(page)
+            print(f'Page: {page}')
+            pool = Pool(pool_size)
+
             for car in cars:
-                car_options = {}
-                # pprint(car, sort_dicts=False)
                 print(f'{count}. {car["url"]}')
-                json_options_data = get_json_options_data(car['url'])
-                if json_options_data:
-                    json_chars = get_chars(json_options_data)
-                    json_options = get_options(json_options_data)
-                    car_options[car['url']] = {
-                        'Характеристики': json_chars,
-                        'Опции': json_options
-                    }
-                    all_cars_options_chars.append(car_options)
-                else:
-                    print(f'Skiping: {car["url"]}')
+                car_options = {}
+                pool.apply_async(get_json_options_data, (car['url'], car_options))
+                all_cars_options_chars.append(car_options)
                 all_cars.append(car)
                 count += 1
-
+            pool.close()
+            pool.join()
 
     print(count)
     save_json(all_cars,  file='cars_data_out.json')
