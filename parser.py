@@ -260,8 +260,8 @@ def load_json(file='cars_data.json'):
     
 
 def main():
-    pool_size = 107
-    pages_count = 1
+    pool_size = 20
+    pages_count = 107
     count = 1
     all_cars = []
     all_cars_options_chars = []
