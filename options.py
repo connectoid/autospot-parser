@@ -39,6 +39,16 @@ def get_json_options_data(url):
         print(f'Request error: {response.status_code}')
 
 
+def get_main_chars(json_data):
+    for item in json_data:
+        if 'main-characteristics' in item:
+            chars = json_data[item]['body']
+    json_chars = {}
+    for char in chars:
+        json_chars[char['title']] = char['value']
+    return json_chars
+
+
 def get_chars(json_data):
     for item in json_data:
         if 'all-characteristics' in item:
@@ -53,7 +63,9 @@ def get_chars(json_data):
 def get_options(json_data):
     for item in json_data:
         if 'all-options-two-column' in item:
-            options = json_data[item]['body']['columns'][0]
+            options1 = json_data[item]['body']['columns'][0]
+            options2 = json_data[item]['body']['columns'][1]
+            options = options1 + options2
     json_options = {}
     for option in options:
         option_items = []
@@ -64,13 +76,17 @@ def get_options(json_data):
     return json_options
 
 
-json_data = get_json_options_data(url)
+# json_data = get_json_options_data(url)
 
 # save_json(json_data, file='options.json')
 
-# json_data = load_json('options.json')
+json_data = load_json('options.json')
 
-json_chars = get_chars(json_data)
+json_main_chars = get_main_chars(json_data)
+json_all_chars = get_chars(json_data)
+
+json_chars = dict(list(json_main_chars.items()) + list(json_all_chars.items()))
+
 save_json(json_chars, file='chars.json')
 print(json_chars)
 
