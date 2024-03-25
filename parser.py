@@ -277,7 +277,7 @@ def main():
                     }
                     all_cars_options_chars.append(car_options)
                 else:
-                    print(f'Skiping: {cars["url"]}')
+                    print(f'Skiping: {car["url"]}')
                 all_cars.append(car)
                 count += 1
             break
